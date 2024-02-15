@@ -49,6 +49,6 @@
     "./public/electron.js"
   ],
   "devDependencies": {
-    "electron": "^28.2.3"
+    "electron": "^24.3.0"
   }
 }

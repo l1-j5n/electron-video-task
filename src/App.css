@@ -1,0 +1,49 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 30px;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+video {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+}
+
+.timeline {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.timeline-clip {
+  height: 20px;
+  background-color: red;
+  border: 1px solid black;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.timeline-clip:last-child {
+  margin-right: 0;
+}
+
+.blade-tool {
+  margin-top: 20px;
+}
+
+.export-button {
+  margin-top: 20px;
+}

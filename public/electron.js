@@ -23,10 +23,12 @@ function createWindow() {
   win = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
-    resizable: false,
+    resizable: true,
+    titleBarStyle: 'hidden',
+    maximizable: true,
+    fullscreenable: true,
     height: DefaultWindowHeight,
     width: DefaultWindowWidth,
-    // frame: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
