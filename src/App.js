@@ -1,14 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Dropzone from "./components/Dropzone";
 import "./App.css";
+const { ipcRenderer } = window.require('electron');
 
 function App() {
   const [videoUrl, setVideoUrl] = useState("");
   const [showDropzone, setShowDropzone] = useState(false);
-  const fileInputRef = useRef(null);
+  const videoRef = useRef(null);
 
   const handleDrop = (files) => {
-    console.log("handle drop called");
     const file = files[0];
     if (file.type.startsWith("video/")) {
       const videoObjectUrl = URL.createObjectURL(file);
@@ -20,11 +20,10 @@ function App() {
   };
 
   const handleSelectFile = () => {
-    fileInputRef.current.click();
+    videoRef.current.click();
   };
 
   const handleFileInputChange = (e) => {
-    console.log("handle file input change called");
     const file = e.target.files[0];
     if (file.type.startsWith("video/")) {
       const videoObjectUrl = URL.createObjectURL(file);
@@ -42,19 +41,48 @@ function App() {
   const handleRemoveVideo = () => {
     setVideoUrl("");
     setShowDropzone(true);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+    if (videoRef.current) {
+      videoRef.current.value = "";
     }
   };
 
+  const trimClip = (input, startTime, duration) => {
+    ipcRenderer.send("trim-video", {
+      inputPath: "/home/logicrays/Videos/testing_video_.mp4",
+      startTime: 10,
+      duration: 5,
+    });
+  };
+
+  const handleClipSaveSuccess = (event, args) => {
+    console.log("handleClipSaveSuccess >> ", args);
+  };
+
+  const handleClipSaveError = (event, args) => {
+    console.log("handleClipSaveError >> ", args);
+  };
+
+  useEffect(() => {
+    // trimClip();
+    ipcRenderer.on('clip-save-success', handleClipSaveSuccess);
+    ipcRenderer.on('clip-save-error', handleClipSaveError);
+    return () => {
+      ipcRenderer.removeListener('clip-save-success', handleClipSaveSuccess);
+      ipcRenderer.removeListener('clip-save-error', handleClipSaveError);
+    };
+  }, []);
+
   return (
-    <div style={{ textAlign: 'center', marginTop: '20px' }}>
-      <button onClick={handleUploadClick} style={{ marginBottom: '20px' }}>Upload Video</button>
+    <div style={{ textAlign: "center", marginTop: "20px" }}>
+      <button onClick={handleUploadClick} style={{ marginBottom: "20px" }}>
+        Upload Video
+      </button>
+      <br />
       {showDropzone && (
         <Dropzone handleDrop={handleDrop} handleSelectFile={handleSelectFile} />
       )}
       <input
-        ref={fileInputRef}
+        ref={videoRef}
         type="file"
         accept="video/*"
         style={{ display: "none" }}
@@ -63,7 +91,11 @@ function App() {
       {videoUrl && (
         <div>
           <button onClick={handleRemoveVideo}>Remove</button>
-          <video src={videoUrl} controls />
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            controls
+          />
         </div>
       )}
     </div>
