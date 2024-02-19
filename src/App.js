@@ -6,6 +6,7 @@ const { ipcRenderer } = window.require("electron");
 
 function App() {
   const [videoUrl, setVideoUrl] = useState("");
+  const [filePath, setFilePath] = useState("");
   const [showDropzone, setShowDropzone] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -15,6 +16,7 @@ function App() {
   const handleDrop = (files) => {
     const file = files[0];
     if (file.type.startsWith("video/")) {
+      setFilePath(file?.path);
       const videoObjectUrl = URL.createObjectURL(file);
       setVideoUrl(videoObjectUrl);
       setShowDropzone(false);
@@ -30,6 +32,7 @@ function App() {
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
     if (file.type.startsWith("video/")) {
+      setFilePath(file?.path);
       const videoObjectUrl = URL.createObjectURL(file);
       setVideoUrl(videoObjectUrl);
       setShowDropzone(false);
@@ -69,15 +72,11 @@ function App() {
     videoRef.current.currentTime = seekTime;
   };
 
-  const handleRemoveClip = (clipIndex) => {
-    // Implement functionality to remove split points and update the timeline
-  };
-
-  const trimClip = (input, startTime, duration) => {
+  const trimClip = (startTime, duration) => {
     ipcRenderer.send("trim-video", {
-      inputPath: "/home/logicrays/Videos/testing_video_.mp4",
-      startTime: 10,
-      duration: 5,
+      inputPath: filePath,
+      startTime: startTime,
+      duration: duration,
     });
   };
 
@@ -90,7 +89,6 @@ function App() {
   };
 
   useEffect(() => {
-    // trimClip();
     ipcRenderer.on("clip-save-success", handleClipSaveSuccess);
     ipcRenderer.on("clip-save-error", handleClipSaveError);
     return () => {
@@ -128,20 +126,11 @@ function App() {
           <div
             ref={timelineRef}
             style={{
-              // width: "80%",
-              // margin: "20px",
               backgroundColor: "#f0f0f0",
               cursor: "pointer",
             }}
             onClick={handleTimelineClick}
           >
-            <div
-              style={{
-                width: `${(currentTime / duration) * 100}%`,
-                height: "20px",
-                backgroundColor: "red",
-              }}
-            />
             <MultiRangeSlider
               min={0}
               max={duration}
@@ -149,6 +138,7 @@ function App() {
                 console.log(`min = ${min}, max = ${max}`)
               }
               currentTime={currentTime}
+              trimClip={trimClip}
             />
           </div>
         </div>

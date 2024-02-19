@@ -21,12 +21,11 @@ let win;
  * @returns Video clip saved or not information to the renderer process
  */
 const trimVideoClip = (inputPath, outputPath, startTime, duration) => {
-  const startTimeInSeconds = toSeconds(startTime); // ex. '2:30'
-  const durationInSeconds = toSeconds(duration) - startTimeInSeconds; // ex. '2:40'
+  const durationInSeconds = duration - startTime;
 
   return new Promise((resolve, reject) => {
     ffmpeg(inputPath)
-      .setStartTime(startTimeInSeconds)
+      .setStartTime(startTime)
       .duration(durationInSeconds)
       .output(outputPath)
       .on("end", () => resolve(outputPath))
@@ -34,16 +33,6 @@ const trimVideoClip = (inputPath, outputPath, startTime, duration) => {
       .run();
   });
 };
-
-/**
- * 
- * @param {*} timeString String '02:30'
- * @returns Returns total seconds of the given timeString
- */
-function toSeconds(timeString) {
-  const [minutes, seconds] = timeString.split(':').map(Number);
-  return minutes * 60 + seconds;
-}
 
 // Trip clip from the video and save into user's system
 ipcMain.on("trim-video", async (event, args) => {

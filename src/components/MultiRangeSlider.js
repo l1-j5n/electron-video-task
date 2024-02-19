@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import "./multiRangeSlider.css";
+import { toMinutes } from "../constants/common";
 
-const MultiRangeSlider = ({ min, max, onChange, currentTime }) => {
+const MultiRangeSlider = ({ min, max, onChange, currentTime, trimClip }) => {
   const [minVal, setMinVal] = useState(min);
   const [maxVal, setMaxVal] = useState(max);
   const thirdVal = (minVal + maxVal) / 2;
@@ -16,9 +17,13 @@ const MultiRangeSlider = ({ min, max, onChange, currentTime }) => {
     [min, max]
   );
 
+  const handleSave = () => {
+    trimClip(minVal, maxVal);
+  };
+
   useEffect(() => {
     const minPercent = getPercent(minVal);
-    const maxPercent = getPercent(maxValRef.current);
+    const maxPercent = getPercent(maxVal);
 
     if (range.current) {
       range.current.style.left = `${minPercent}%`;
@@ -36,7 +41,6 @@ const MultiRangeSlider = ({ min, max, onChange, currentTime }) => {
   }, [maxVal, getPercent]);
 
   useEffect(() => {
-    setMaxVal(max);
     thirdValRef.current = thirdVal;
   }, [minVal, maxVal, onChange, max, thirdVal]);
 
@@ -48,6 +52,9 @@ const MultiRangeSlider = ({ min, max, onChange, currentTime }) => {
         max={max}
         value={minVal}
         onChange={(event) => {
+          let sliderRange = document.getElementsByClassName("slider__range");
+          sliderRange.left = `${(minVal / maxVal) * 100}%`;
+          sliderRange.width = `${maxVal - minVal}%`;
           const value = Math.min(Number(event.target.value), maxVal);
           setMinVal(value);
           minValRef.current = value;
@@ -61,7 +68,7 @@ const MultiRangeSlider = ({ min, max, onChange, currentTime }) => {
         max={max}
         value={maxVal}
         onChange={(event) => {
-          const value = Math.max(Number(event.target.value), minVal);
+          const value = Math.max(Number(event.target.value), minVal + 1);
           setMaxVal(value);
           maxValRef.current = value;
         }}
@@ -89,10 +96,14 @@ const MultiRangeSlider = ({ min, max, onChange, currentTime }) => {
         <div ref={range} className="slider__range" />
       </div>
       <div className="values">
-        <div className="slider__left-value">{minVal}</div>
-        <div className="slider__middle-value">{currentTime.toFixed()}</div>
-        <div className="slider__right-value">{maxVal}</div>
+        <div className="slider__left-value">{toMinutes(minVal.toFixed())}</div>
+        <div className="slider__middle-value">{toMinutes(currentTime.toFixed())}</div>
+        <div className="slider__right-value">{toMinutes(maxVal.toFixed())}</div>
       </div>
+
+      <button onClick={handleSave} style={{ marginBottom: "20px" }}>
+        Save
+      </button>
     </div>
   );
 };

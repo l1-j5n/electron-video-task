@@ -125,3 +125,19 @@
   justify-content: space-between;
   width: 100%;
 }
+
+.thumb--third{
+  z-index: 99;
+}
+
+.thumb--third[type=range] {
+  -webkit-appearance: none;
+}
+
+.thumb--third[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: rgb(52, 39, 163);
+  height: 30px;
+  width: 5px;
+  border-radius: 0;
+}
