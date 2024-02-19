@@ -1,0 +1,106 @@
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import PropTypes from "prop-types";
+import "./multiRangeSlider.css";
+
+const MultiRangeSlider = ({ min, max, onChange, currentTime }) => {
+  const [minVal, setMinVal] = useState(min);
+  const [maxVal, setMaxVal] = useState(max);
+  const thirdVal = (minVal + maxVal) / 2;
+  const minValRef = useRef(min);
+  const maxValRef = useRef(max);
+  const thirdValRef = useRef(thirdVal);
+  const range = useRef(null);
+
+  const getPercent = useCallback(
+    (value) => Math.round(((value - min) / (max - min)) * 100),
+    [min, max]
+  );
+
+  useEffect(() => {
+    const minPercent = getPercent(minVal);
+    const maxPercent = getPercent(maxValRef.current);
+
+    if (range.current) {
+      range.current.style.left = `${minPercent}%`;
+      range.current.style.width = `${maxPercent - minPercent}%`;
+    }
+  }, [minVal, getPercent]);
+
+  useEffect(() => {
+    const minPercent = getPercent(minValRef.current);
+    const maxPercent = getPercent(maxVal);
+
+    if (range.current) {
+      range.current.style.width = `${maxPercent - minPercent}%`;
+    }
+  }, [maxVal, getPercent]);
+
+  useEffect(() => {
+    setMaxVal(max);
+    thirdValRef.current = thirdVal;
+  }, [minVal, maxVal, onChange, max, thirdVal]);
+
+  return (
+    <div className="container">
+      <input
+        type="range"
+        min={min}
+        max={max}
+        value={minVal}
+        onChange={(event) => {
+          const value = Math.min(Number(event.target.value), maxVal);
+          setMinVal(value);
+          minValRef.current = value;
+        }}
+        className="thumb thumb--left"
+        style={{ zIndex: minVal > max - 100 && "5" }}
+      />
+      <input
+        type="range"
+        min={min}
+        max={max}
+        value={maxVal}
+        onChange={(event) => {
+          const value = Math.max(Number(event.target.value), minVal);
+          setMaxVal(value);
+          maxValRef.current = value;
+        }}
+        className="thumb thumb--right"
+      />
+
+      <input
+        type="range"
+        min={min}
+        max={max}
+        value={currentTime}
+        onChange={(event) => {
+          const value = Math.max(
+            min,
+            Math.min(Number(event.target.value), max)
+          );
+          thirdValRef.current = value;
+          onChange([minVal, value, maxVal]);
+        }}
+        className="thumb thumb--third"
+      />
+
+      <div className="slider">
+        <div className="slider__track" />
+        <div ref={range} className="slider__range" />
+      </div>
+      <div className="values">
+        <div className="slider__left-value">{minVal}</div>
+        <div className="slider__middle-value">{currentTime.toFixed()}</div>
+        <div className="slider__right-value">{maxVal}</div>
+      </div>
+    </div>
+  );
+};
+
+MultiRangeSlider.propTypes = {
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
+export default MultiRangeSlider;
