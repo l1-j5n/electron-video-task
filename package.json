@@ -4,7 +4,7 @@
   "main": "public/electron.js",
   "author": {
     "name": "Mitesh",
-    "email": "Mitesh@gmail.com"
+    "email": "mitesh@gmail.com"
   },
   "description": "Video editor application.",
   "license": "MIT",
@@ -26,7 +26,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "watch": "electron ."
+    "watch": "electron .",
+    "builder": "electron-builder build"
   },
   "eslintConfig": {
     "extends": [
@@ -51,6 +52,37 @@
     "./public/electron.js"
   ],
   "devDependencies": {
-    "electron": "^24.3.0"
+    "electron": "^24.3.0",
+    "electron-builder": "^24.6.4"
+  },
+  "build": {
+    "win": {
+      "target": "msi"
+    },
+    "icon": "build/app-icon.png",
+    "msi": {
+      "oneClick": true,
+      "warningsAsErrors": false,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/app-icon.icns"
+    },
+    "linux": {
+      "target": "deb",
+      "icon": "build/app-icon.icns",
+      "artifactName": "Video - Editor",
+      "detectUpdateChannel": true,
+      "generateUpdatesFilesForAllChannels": true,
+      "maintainer": "Logicrays",
+      "packageCategory": "Linux",
+      "category": "General",
+      "synopsis": "Video-Editor installer",
+      "vendor": "Logicrays"
+    }
   }
 }

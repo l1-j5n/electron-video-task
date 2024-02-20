@@ -53,6 +53,8 @@ function App() {
     setShowDropzone(true);
     setCurrentTime(0);
     setDuration(0);
+    setImages([]);
+    setMinVal(0);
     if (videoRef.current) {
       videoRef.current.value = "";
     }

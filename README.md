@@ -1,70 +1,57 @@
-# Getting Started with Create React App
+# Video - Editor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+It is desktop app which is used to trim the video or in other words we can say it used for create a clip from video.
 
-## Available Scripts
+### Technology Used
 
-In the project directory, you can run:
+- Javascript
+- NodeJS
+- ElectronJS
+- ReactJS
 
-### `npm start`
+### Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Video Trimming
+  - User have to select particular mp4 format file from local system and then have to manage the brushes for set the clip timing. Then on click of save button they just have to pass path and name of video and it will get store at give path in mp4 format.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Steps to run app in DEVELOPMENT environment
 
-### `npm test`
+- Set Environment to "DEVELOPMENT" in public/common/constants.js file.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### First Terminal
 
-### `npm run build`
+- npm i
+- package.json ("main": "public/electron.js") set "main" entry path with "public/electron.js" if it is "build/electron.js".
+- npm run start
+- Above steps will start the react app in development environment.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### Second Terminal
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- npm run watch
+- Now above command will run app in development environment.
+- It will get close if terminal gets close or kill the process in terminal.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Steps to create BUILD for LINUX platform
 
-### `npm run eject`
+- Install all the necessary packages before create a build by run command "npm i" in terminal.
+  1. set "Environment" from "DEVELOPMENT" to "PRODUCTION" in public > common > constants.js file.
+  2. run "PUBLIC_URL='./' npm run build" command in terminal (you can see new folder with name "build" in project directory).
+  3. run "npm run builder" command in terminal. (you can see new folder with name "dist" in project directory.)
+  4. The .dmg file which is located in directory > "dist" folder is sharable and installable.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Steps to create BUILD for MAC platform
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Install all the necessary packages before create a build by run command "npm i" in terminal.
+  1. set "Environment" from "DEVELOPMENT" to "PRODUCTION" in public > common > constants.js file.
+  2. run "PUBLIC_URL='./' npm run build" command in terminal (you can see new folder with name "build" in project directory)
+  3. set this command to 'builder' script "export CSC_IDENTITY_AUTO_DISCOVERY=false && electron-builder build"
+  4. run "npm run builder" command in terminal. (you can see new folder with name "dist" in project directory.)
+  5. The .dmg file which is located in directory > "dist" folder is sharable and installable.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Steps to create BUILD for WINDOWS platform
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Install all the necessary packages before create a build by run command "npm i" in terminal.
+  1. set "Environment" from "DEVELOPMENT" to "PRODUCTION" in public > common > constants.js file.
+  2. run "$env:PUBLIC_URL='./'; npm run build" command in terminal (you can see new folder with name "build" in project directory)
+  3. run "npm run builder" command in terminal. (you can see new folder with name "dist" in project directory.)
+  4. The .dmg file which is located in directory > "dist" folder is sharable and installable.
