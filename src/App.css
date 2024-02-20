@@ -16,7 +16,7 @@ button {
 }
 
 video {
-  width: 100%;
+  width: 70%;
   height: auto;
   margin-top: 20px;
 }
@@ -45,4 +45,35 @@ video {
 
 .export-button {
   margin-top: 20px;
+}
+
+.output {
+  border-radius: 0.75em;
+  display: flex;
+  max-width: 95vw;
+  overflow-x: auto;
+}
+
+/* .output a {
+  border-radius: inherit;
+  display: block;
+}
+
+.output a + a {
+  margin-left: 0.25rem;
+} */
+
+.output img {
+  border-radius: inherit;
+  width: 15rem;
+}
+
+.visually-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }

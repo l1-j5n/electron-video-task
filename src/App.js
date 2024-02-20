@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Dropzone from "./components/Dropzone";
 import "./App.css";
 import MultiRangeSlider from "./components/MultiRangeSlider";
+import { GetFrames } from "./constants/common";
 const { ipcRenderer } = window.require("electron");
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const [duration, setDuration] = useState(0);
   const [minVal, setMinVal] = useState(0);
   const [maxVal, setMaxVal] = useState(duration);
+  const [images, setImages] = useState([]);
   const videoRef = useRef(null);
   const timelineRef = useRef(null);
 
@@ -19,22 +21,14 @@ function App() {
 
   const handleDrop = (files) => {
     const file = files[0];
-    if (file.type.startsWith("video/")) {
-      setFilePath(file?.path);
-      const videoObjectUrl = URL.createObjectURL(file);
-      setVideoUrl(videoObjectUrl);
-      setShowDropzone(false);
-    } else {
-      alert("Please drop a valid video file");
-    }
+    handleImportedFile(file);
   };
 
   const handleSelectFile = () => {
     videoRef.current.click();
   };
 
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
+  const handleImportedFile = async (file) => {
     if (file.type.startsWith("video/")) {
       setFilePath(file?.path);
       const videoObjectUrl = URL.createObjectURL(file);
@@ -43,6 +37,11 @@ function App() {
     } else {
       alert("Please select a valid video file");
     }
+  };
+
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    handleImportedFile(file);
   };
 
   const handleUploadClick = () => {
@@ -63,9 +62,11 @@ function App() {
     setCurrentTime(videoRef.current.currentTime);
   };
 
-  const handleLoadedMetadata = () => {
+  const handleLoadedMetadata = async () => {
     setDuration(videoRef.current.duration);
     setMaxVal(videoRef.current.duration);
+    const frames = await GetFrames(videoUrl, 10, 0);
+    setImages(frames);
   };
 
   const handleTimelineClick = (e) => {
@@ -101,6 +102,8 @@ function App() {
       ipcRenderer.removeListener("clip-save-error", handleClipSaveError);
     };
   }, []);
+
+  const now = new Date().toDateString();
 
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
@@ -149,6 +152,18 @@ function App() {
               currentTime={currentTime}
               trimClip={trimClip}
             />
+            {images?.length > 0 && (
+              <div className="output">
+                {images.map((imgData, index) => (
+                  <>
+                    <a key={imgData.image} href={imgData.image}>
+                      <p>{imgData.captureTime}</p>
+                      <img src={imgData.image} alt="" />
+                    </a>
+                  </>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

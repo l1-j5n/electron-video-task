@@ -1,6 +1,6 @@
 /**
  *
- * @param {*} timeString String '02:30'
+ * @param {string} timeString String '02:30'
  * @returns Returns total seconds of the given timeString
  */
 function toSeconds(timeString) {
@@ -10,7 +10,7 @@ function toSeconds(timeString) {
 
 /**
  *
- * @param {*} timeString Number 125
+ * @param {string} timeString Number 125
  * @returns Returns (02:05) total minutes and seconds of the given timeString
  */
 function toMinutes(timeString) {
@@ -24,7 +24,82 @@ function toMinutes(timeString) {
   return minutesStr + ":" + secondsStr;
 }
 
+/**
+ * Extracts frames from the video and returns them as an array of imageData
+ * @param {string} videoUrl url to the video file (html5 compatible format) eg: mp4
+ * @param {number} amount number of frames per second or total number of frames that you want to extract
+ * @param {number} type [fps, totalFrames] The method of extracting frames: Number of frames per second of video or the total number of frames across the whole video duration. defaults to fps
+ * @returns Array of frames
+ */
+async function GetFrames(videoUrl, amount) {
+  const frames = [];
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  let duration;
+
+  const video = document.createElement("video");
+  video.preload = "auto";
+
+  await new Promise((resolve) => {
+    video.addEventListener("loadeddata", () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      duration = video.duration;
+      resolve();
+    });
+
+    video.src = videoUrl;
+    video.load();
+  });
+
+  let totalFrames = amount;
+  if (duration < totalFrames) {
+    totalFrames = duration;
+  }
+
+  for (let time = 0; time < duration; time += duration / totalFrames) {
+    frames.push({
+      image: await getVideoFrame(video, context, canvas, time),
+      captureTime: time,
+    });
+  }
+
+  return frames;
+}
+
+/**
+ * Retrieves a single frame from the video at a specified time
+ * @param {HTMLVideoElement} video HTML video element
+ * @param {CanvasRenderingContext2D} context Canvas rendering context
+ * @param {HTMLCanvasElement} canvas HTML canvas element
+ * @param {number} time Time in seconds to retrieve the frame from
+ * @returns Captured frame
+ */
+async function getVideoFrame(video, context, canvas, time) {
+  return new Promise((resolve) => {
+    const eventCallback = () => {
+      video.removeEventListener("seeked", eventCallback);
+      storeFrame(video, context, canvas, resolve);
+    };
+    video.addEventListener("seeked", eventCallback);
+    video.currentTime = time;
+  });
+}
+
+/**
+ * Stores the frame on the canvas and resolves with the data URL
+ * @param {HTMLVideoElement} video HTML video element
+ * @param {CanvasRenderingContext2D} context Canvas rendering context
+ * @param {HTMLCanvasElement} canvas HTML canvas element
+ * @param {function} resolve Resolve function for the Promise
+ */
+function storeFrame(video, context, canvas, resolve) {
+  context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+  resolve(canvas.toDataURL());
+}
+
 module.exports = {
   toSeconds,
   toMinutes,
+  GetFrames,
 };
