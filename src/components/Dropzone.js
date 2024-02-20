@@ -28,8 +28,8 @@ const Dropzone = ({ handleDrop, handleSelectFile }) => {
         lineHeight: "200px",
       }}
     >
-      <button onClick={handleSelectFile}>Select File</button>
-      (or drop video files here)
+      <button onClick={handleSelectFile}>  Select File</button>
+      or drop video files here
     </div>
   );
 };

@@ -2,6 +2,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 30px;
   padding: 0;
+  overflow-x: hidden;
 }
 
 .container {
@@ -19,6 +20,7 @@ video {
   width: 70%;
   height: auto;
   margin-top: 20px;
+  margin-bottom: 50px;
 }
 
 .timeline {
@@ -50,10 +52,27 @@ video {
 .output {
   border-radius: 0.75em;
   display: flex;
-  max-width: 95vw;
+  width: 100%; 
+  max-width: 100%;
   overflow-x: auto;
+  position: absolute;
+  /* margin-top: -190px; */
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  justify-content: center;
+  top: -21px;
 }
 
+.output::-webkit-scrollbar {
+  width: 1px;height: 1px;
+
+}
+.output::-webkit-scrollbar-thumb {
+  background-color: #00e0ff;
+  outline: 1px solid rgb(145, 178, 211)
+}
 /* .output a {
   border-radius: inherit;
   display: block;
@@ -76,4 +95,88 @@ video {
   position: absolute;
   white-space: nowrap;
   width: 1px;
+}
+
+body{
+  margin:0;
+  padding:0;
+}
+div#root {
+ background: linear-gradient(180deg,#003d75,#232b56);
+ padding:30px; 
+ min-height: 93.9vh;
+}
+div#root > div{
+margin:0 !important;   
+}
+.button-demo {
+  text-align:center;
+}
+.button-demo  button{
+  background:#2962ff;
+  border:1px solid #2962ff;
+  color:white;
+  padding:20px 25px;
+  font-weight:700;
+  border-radius:20px;
+  
+}
+.file-upload {
+  margin-top:80px
+}
+.file-upload  div{
+  color:white;
+}
+.file-upload  div button{
+  margin-right:10px
+}
+.video-wrapper > button {
+  background: transparent;
+  border: none;
+  position: fixed;
+  top: 26px;
+  right: 12px;
+  z-index: 99999;
+}
+.video-wrapper > button  svg{
+  width:50px;
+  height: 50px;
+}
+.video-wrapper > button  svg path{
+  stroke:white;
+}
+.slider__track{
+  background-color: transparent !important;
+  position: relative !important;
+}
+.slider__range {
+  background-color: transparent !important;
+
+  position: static !important;
+  height: 50px !important;
+  margin-top: -31px;
+}
+.thumb::-webkit-slider-thumb {
+  background-color:#00e0ff !important;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  margin-top: 4px;
+  pointer-events: all;
+  position: relative;
+
+}
+.speed-scroll{
+position: relative;
+}
+.output img{
+  height: 144px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.output > div{
+  width:10%;
 }

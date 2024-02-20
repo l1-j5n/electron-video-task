@@ -109,23 +109,55 @@ function App() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
-      <button onClick={handleUploadClick} style={{ marginBottom: "20px" }}>
-        Upload Video
-      </button>
-      <br />
-      {showDropzone && (
-        <Dropzone handleDrop={handleDrop} handleSelectFile={handleSelectFile} />
-      )}
-      <input
-        ref={videoRef}
-        type="file"
-        accept="video/*"
-        style={{ display: "none" }}
-        onChange={handleFileInputChange}
-      />
+      <div className="button-demo">
+        <button onClick={handleUploadClick}>Upload Video</button>
+      </div>
+
+      <div className="file-upload">
+        {showDropzone && (
+          <Dropzone
+            handleDrop={handleDrop}
+            handleSelectFile={handleSelectFile}
+          />
+        )}
+
+        <input
+          ref={videoRef}
+          type="file"
+          accept="video/*"
+          style={{ display: "none" }}
+          onChange={handleFileInputChange}
+        />
+      </div>
+
       {videoUrl && (
-        <div>
-          <button onClick={handleRemoveVideo}>Remove</button>
+        <div className="video-wrapper">
+          <button onClick={handleRemoveVideo}>
+            <svg
+              width="256px"
+              height="256px"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                {" "}
+                <path
+                  d="M16 8L8 16M8.00001 8L16 16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                  stroke="#000000"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>{" "}
+              </g>
+            </svg>
+          </button>
           <video
             ref={videoRef}
             src={videoUrl}
@@ -135,36 +167,37 @@ function App() {
           />
           <div
             ref={timelineRef}
+            className="speed-scroll"
             style={{
-              backgroundColor: "#f0f0f0",
               cursor: "pointer",
             }}
             onClick={handleTimelineClick}
           >
-            <MultiRangeSlider
-              min={0}
-              max={duration}
-              minVal={minVal}
-              maxVal={maxVal}
-              setMinVal={setMinVal}
-              setMaxVal={setMaxVal}
-              onChange={({ min, max }) =>
-                console.log(`min = ${min}, max = ${max}`)
-              }
-              currentTime={currentTime}
-              trimClip={trimClip}
-            />
             {images?.length > 0 && (
-              <div className="output">
-                {images.map((imgData, index) => (
-                  <>
-                    <a key={imgData.image} href={imgData.image}>
-                      <p>{imgData.captureTime}</p>
-                      <img src={imgData.image} alt="" />
-                    </a>
-                  </>
-                ))}
-              </div>
+              <>
+                <MultiRangeSlider
+                  min={0}
+                  max={duration}
+                  minVal={minVal}
+                  maxVal={maxVal}
+                  setMinVal={setMinVal}
+                  setMaxVal={setMaxVal}
+                  onChange={({ min, max }) =>
+                    console.log(`min = ${min}, max = ${max}`)
+                  }
+                  currentTime={currentTime}
+                  trimClip={trimClip}
+                />
+                <div className="output">
+                  {images.map((imgData, index) => (
+                    <div style={{ opacity: "1" }}>
+                      <a key={imgData.image} href={imgData.image}>
+                        <img src={imgData.image} alt="" />
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         </div>

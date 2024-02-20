@@ -53,9 +53,6 @@ async function GetFrames(videoUrl, amount) {
   });
 
   let totalFrames = amount;
-  if (duration < totalFrames) {
-    totalFrames = duration;
-  }
 
   for (let time = 0; time < duration; time += duration / totalFrames) {
     frames.push({
