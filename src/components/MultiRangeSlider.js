@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 import "./multiRangeSlider.css";
 import { toMinutes } from "../constants/common";
 
-const MultiRangeSlider = ({ min, max, onChange, currentTime, trimClip }) => {
-  const [minVal, setMinVal] = useState(min);
-  const [maxVal, setMaxVal] = useState(max);
+const MultiRangeSlider = ({ min, max, minVal, maxVal, setMinVal, setMaxVal, onChange, currentTime, trimClip }) => {
   const thirdVal = (minVal + maxVal) / 2;
   const minValRef = useRef(min);
   const maxValRef = useRef(max);

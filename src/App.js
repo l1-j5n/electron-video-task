@@ -10,8 +10,12 @@ function App() {
   const [showDropzone, setShowDropzone] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [minVal, setMinVal] = useState(0);
+  const [maxVal, setMaxVal] = useState(duration);
   const videoRef = useRef(null);
   const timelineRef = useRef(null);
+
+  useEffect(() => {}, [maxVal]);
 
   const handleDrop = (files) => {
     const file = files[0];
@@ -61,6 +65,7 @@ function App() {
 
   const handleLoadedMetadata = () => {
     setDuration(videoRef.current.duration);
+    setMaxVal(videoRef.current.duration);
   };
 
   const handleTimelineClick = (e) => {
@@ -134,6 +139,10 @@ function App() {
             <MultiRangeSlider
               min={0}
               max={duration}
+              minVal={minVal}
+              maxVal={maxVal}
+              setMinVal={setMinVal}
+              setMaxVal={setMaxVal}
               onChange={({ min, max }) =>
                 console.log(`min = ${min}, max = ${max}`)
               }
