@@ -12,10 +12,12 @@ function App() {
   const [duration, setDuration] = useState(0);
   const [minVal, setMinVal] = useState(0);
   const [maxVal, setMaxVal] = useState(duration);
+  const [maxRight, setMaxRight] = useState(duration);
   const [images, setImages] = useState([]);
   const videoRef = useRef(null);
   const inputRef = useRef(null);
   const timelineRef = useRef(null);
+  const playPauseButtonRef = useRef(null);
 
   useEffect(() => {}, [maxVal, inputRef]);
 
@@ -60,6 +62,7 @@ function App() {
   const handleLoadedMetadata = async () => {
     setDuration(videoRef.current.duration);
     setMaxVal(videoRef.current.duration);
+    setMaxRight(videoRef.current.duration);
     const frames = await GetFrames(videoUrl, 10, 0);
     setImages(frames);
   };
@@ -71,6 +74,19 @@ function App() {
     const seekTime = percentage * duration;
     setCurrentTime(seekTime);
     videoRef.current.currentTime = seekTime;
+  };
+
+  const handlePlayPause = () => {
+    console.log("videoRef.current.currentTime: ", videoRef.current.currentTime);
+    setCurrentTime(videoRef.current.currentTime);
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      playPauseButtonRef.current.textContent = "Pause";
+    } else {
+      playPauseButtonRef.current.textContent = "Play";
+      videoRef.current.currentTime = videoRef.current.currentTime;
+      videoRef.current.pause();
+    }
   };
 
   const trimClip = (startTime, duration) => {
@@ -148,7 +164,6 @@ function App() {
           <video
             ref={videoRef}
             src={videoUrl}
-            controls
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
           />
@@ -167,6 +182,7 @@ function App() {
                   max={duration}
                   minVal={minVal}
                   maxVal={maxVal}
+                  maxRight={maxRight}
                   setMinVal={setMinVal}
                   setMaxVal={setMaxVal}
                   onChange={({ min, max }) =>
@@ -174,6 +190,8 @@ function App() {
                   }
                   currentTime={currentTime}
                   trimClip={trimClip}
+                  playPauseButtonRef={playPauseButtonRef}
+                  handlePlayPause={handlePlayPause}
                 />
                 <div className="output">
                   {images.map((imgData, index) => (

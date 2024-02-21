@@ -3,7 +3,20 @@ import PropTypes from "prop-types";
 import "./multiRangeSlider.css";
 import { toMinutes } from "../constants/common";
 
-const MultiRangeSlider = ({ min, max, minVal, maxVal, setMinVal, setMaxVal, onChange, currentTime, trimClip }) => {
+const MultiRangeSlider = ({
+  min,
+  max,
+  minVal,
+  maxVal,
+  maxRight,
+  setMinVal,
+  setMaxVal,
+  onChange,
+  currentTime,
+  trimClip,
+  playPauseButtonRef,
+  handlePlayPause,
+}) => {
   const thirdVal = (minVal + maxVal) / 2;
   const minValRef = useRef(min);
   const maxValRef = useRef(max);
@@ -60,6 +73,17 @@ const MultiRangeSlider = ({ min, max, minVal, maxVal, setMinVal, setMaxVal, onCh
         className="thumb thumb--left"
         style={{ zIndex: minVal > max - 100 && "5" }}
       />
+      <div
+        className="selected-range-left"
+        style={{ width: `${(minVal * 100) / maxRight}%` }}
+      ></div>
+      <div
+        className="selected-range-right"
+        style={{
+          left: `${(maxVal * 100) / maxRight}%`,
+          width: `${((maxRight - maxVal) * 100) / maxRight}%`,
+        }}
+      ></div>
       <input
         type="range"
         min={min}
@@ -95,11 +119,16 @@ const MultiRangeSlider = ({ min, max, minVal, maxVal, setMinVal, setMaxVal, onCh
       </div>
       <div className="values">
         <div className="slider__left-value">{toMinutes(minVal.toFixed())}</div>
-        <div className="slider__middle-value">{toMinutes(currentTime.toFixed())}</div>
+        <div className="slider__middle-value">
+          {toMinutes(currentTime.toFixed())}
+        </div>
         <div className="slider__right-value">{toMinutes(maxVal.toFixed())}</div>
       </div>
 
-      <button onClick={handleSave} style={{ marginBottom: "20px" }}>
+      <button className="play-btn" ref={playPauseButtonRef} onClick={handlePlayPause}>
+        Play
+      </button>
+      <button className="save-btn" onClick={handleSave} style={{ marginBottom: "20px" }}>
         Save
       </button>
     </div>

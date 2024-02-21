@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain } = require("electron");
+const { app, BrowserWindow, dialog, ipcMain, Menu } = require("electron");
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 const ffmpeg = require("fluent-ffmpeg");
@@ -120,3 +120,7 @@ function createWindow() {
 }
 
 app.whenReady().then(createWindow);
+
+app.on('ready', () => {
+  Menu.setApplicationMenu(null);
+});

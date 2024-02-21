@@ -104,8 +104,8 @@
 
 .slider__left-value,
 .slider__right-value {
-  color: cornflowerblue;
-  font-size: 12px;
+  color: #fff !important;
+  font-size: 20px;
   margin-top: 20px;
 }
 
@@ -115,6 +115,8 @@
 
 .slider__middle-value {
   left: 6px;
+  font-size: 20px;
+  color: #f80404 !important;
 }
 
 .slider__right-value {
@@ -130,27 +132,28 @@
   color: #00e0ff !important;
 }
 
-.slider__left-value, .slider__right-value{
+.slider__left-value,
+.slider__right-value {
   color: #00e0ff;
 }
 
-.thumb--third{
+.thumb--third {
   z-index: 99;
 }
 
-.thumb--third[type=range] {
+.thumb--third[type="range"] {
   -webkit-appearance: none;
 }
 
-.thumb--third[type=range]::-webkit-slider-thumb {
+.thumb--third[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  background: rgb(52, 39, 163);
+  background: #ff0202 !important;
   height: 30px;
   width: 5px;
   border-radius: 0;
 }
 
-.thumb--right[type=range]::-webkit-slider-thumb {
+.thumb--right[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   background: rgb(52, 39, 163);
   height: 143px;
@@ -159,15 +162,15 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 10px;
   border-top-right-radius: 10px;
-  top:48px;
+  top: 48px;
 }
 
-.thumb--third[type=range]::-webkit-slider-thumb{
+.thumb--third[type="range"]::-webkit-slider-thumb {
   height: 143px;
-  top:48px;
+  top: 48px;
 }
 
-.thumb--left[type=range]::-webkit-slider-thumb {
+.thumb--left[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   background: rgb(52, 39, 163);
   height: 143px;
@@ -176,19 +179,45 @@
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
-  top:48px;
+  top: 48px;
 }
 
-.speed-scroll button{
-  margin-top:40px !important;    
-  border-radius: 15px;
+.speed-scroll button {
+  margin-top: 40px !important;
+  margin: 10px;
+  border-radius: 8px;
   box-sizing: border-box;
   padding: 0 20px;
   height: 50px;
   background-color: #fff;
-  border: 1px solid hsla(0,0%,100%,0);
+  border: 1px solid hsla(0, 0%, 100%, 0);
   color: #000;
   font-size: 14px;
   min-width: 100px;
   font-weight: 600;
- }
+}
+
+.save-btn{
+  background-color: #04ef57 !important;
+}
+.play-btn{
+  background-color: #2962ff !important;
+  color: #fff !important;
+}
+.selected-range-left,
+.selected-range-right {
+  position: absolute;
+  top: -21px;
+  height: 144px;
+  z-index: 2;
+}
+
+.selected-range-left {
+  background-color: #007bff;
+  opacity: 0.3;
+}
+
+.selected-range-right {
+  background-color: #007bff3d;
+}
+
