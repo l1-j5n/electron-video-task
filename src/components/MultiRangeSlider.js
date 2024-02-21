@@ -13,11 +13,8 @@ const MultiRangeSlider = ({
   setMaxVal,
   onChange,
   currentTime,
-  trimClip,
-  playPauseButtonRef,
-  handlePlayPause,
 }) => {
-  const thirdVal = (minVal + maxVal) / 2;
+  const thirdVal = 0;
   const minValRef = useRef(min);
   const maxValRef = useRef(max);
   const thirdValRef = useRef(thirdVal);
@@ -27,10 +24,6 @@ const MultiRangeSlider = ({
     (value) => Math.round(((value - min) / (max - min)) * 100),
     [min, max]
   );
-
-  const handleSave = () => {
-    trimClip(minVal, maxVal);
-  };
 
   useEffect(() => {
     const minPercent = getPercent(minVal);
@@ -53,7 +46,7 @@ const MultiRangeSlider = ({
 
   useEffect(() => {
     thirdValRef.current = thirdVal;
-  }, [minVal, maxVal, onChange, max, thirdVal]);
+  }, [minVal, maxVal, max, thirdVal]);
 
   return (
     <div className="container">
@@ -124,13 +117,6 @@ const MultiRangeSlider = ({
         </div>
         <div className="slider__right-value">{toMinutes(maxVal.toFixed())}</div>
       </div>
-
-      <button className="play-btn" ref={playPauseButtonRef} onClick={handlePlayPause}>
-        Play
-      </button>
-      <button className="save-btn" onClick={handleSave} style={{ marginBottom: "20px" }}>
-        Save
-      </button>
     </div>
   );
 };

@@ -76,15 +76,14 @@ function App() {
     videoRef.current.currentTime = seekTime;
   };
 
-  const handlePlayPause = () => {
-    console.log("videoRef.current.currentTime: ", videoRef.current.currentTime);
+  const handlePlayPause = (e) => {
+    e.stopPropagation();
     setCurrentTime(videoRef.current.currentTime);
     if (videoRef.current.paused) {
       videoRef.current.play();
       playPauseButtonRef.current.textContent = "Pause";
     } else {
       playPauseButtonRef.current.textContent = "Play";
-      videoRef.current.currentTime = videoRef.current.currentTime;
       videoRef.current.pause();
     }
   };
@@ -205,6 +204,26 @@ function App() {
               </>
             )}
           </div>
+          {images?.length > 0 && (
+            <>
+              <div className="container">
+                <button
+                  className="play-btn"
+                  ref={playPauseButtonRef}
+                  onClick={handlePlayPause}
+                >
+                  Play
+                </button>
+                <button
+                  className="save-btn"
+                  onClick={() => trimClip(minVal, maxVal)}
+                  style={{ marginBottom: "20px" }}
+                >
+                  Save
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

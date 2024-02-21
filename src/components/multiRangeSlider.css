@@ -197,13 +197,6 @@
   font-weight: 600;
 }
 
-.save-btn{
-  background-color: #04ef57 !important;
-}
-.play-btn{
-  background-color: #2962ff !important;
-  color: #fff !important;
-}
 .selected-range-left,
 .selected-range-right {
   position: absolute;
