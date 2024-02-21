@@ -55,6 +55,7 @@ const MultiRangeSlider = ({
         min={min}
         max={max}
         value={minVal}
+        step={"0.01"}
         onChange={(event) => {
           let sliderRange = document.getElementsByClassName("slider__range");
           sliderRange.left = `${(minVal / maxVal) * 100}%`;
@@ -82,6 +83,7 @@ const MultiRangeSlider = ({
         min={min}
         max={max}
         value={maxVal}
+        step={"0.01"}
         onChange={(event) => {
           const value = Math.max(Number(event.target.value), minVal + 1);
           setMaxVal(value);
@@ -95,6 +97,7 @@ const MultiRangeSlider = ({
         min={min}
         max={max}
         value={currentTime}
+        step={"0.01"}
         onChange={(event) => {
           const value = Math.max(
             min,

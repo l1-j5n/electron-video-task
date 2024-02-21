@@ -65,9 +65,10 @@ function App() {
   };
 
   const handleLoadedMetadata = async () => {
-    setDuration(videoRef.current.duration);
-    setMaxVal(videoRef.current.duration);
-    setMaxRight(videoRef.current.duration);
+    let duration = videoRef.current.duration;
+    setDuration(duration);
+    setMaxVal(duration);
+    setMaxRight(duration);
     const frames = await GetFrames(videoUrl, 10, 0);
     setImages(frames);
   };

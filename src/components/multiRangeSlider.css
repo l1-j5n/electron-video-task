@@ -29,6 +29,7 @@
   height: 0px;
   width: 100%;
   left: 0;
+  margin: 0;
 }
 
 .thumb--left {
@@ -200,6 +201,7 @@
 .selected-range-left,
 .selected-range-right {
   position: absolute;
+  border-radius: 10px;
   top: -21px;
   height: 144px;
   z-index: 2;
