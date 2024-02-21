@@ -1,4 +1,5 @@
 import React from "react";
+import "./dropzone.css";
 
 const Dropzone = ({ handleDrop, handleSelectFile }) => {
   const handleDragOver = (e) => {
@@ -28,7 +29,10 @@ const Dropzone = ({ handleDrop, handleSelectFile }) => {
         lineHeight: "200px",
       }}
     >
-      <button onClick={handleSelectFile}>  Select File</button>
+      <button className="button-demo" onClick={handleSelectFile}>
+        {" "}
+        Select File
+      </button>
       or drop video files here
     </div>
   );

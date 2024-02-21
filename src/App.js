@@ -8,16 +8,16 @@ const { ipcRenderer } = window.require("electron");
 function App() {
   const [videoUrl, setVideoUrl] = useState("");
   const [filePath, setFilePath] = useState("");
-  const [showDropzone, setShowDropzone] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [minVal, setMinVal] = useState(0);
   const [maxVal, setMaxVal] = useState(duration);
   const [images, setImages] = useState([]);
   const videoRef = useRef(null);
+  const inputRef = useRef(null);
   const timelineRef = useRef(null);
 
-  useEffect(() => {}, [maxVal]);
+  useEffect(() => {}, [maxVal, inputRef]);
 
   const handleDrop = (files) => {
     const file = files[0];
@@ -25,15 +25,14 @@ function App() {
   };
 
   const handleSelectFile = () => {
-    videoRef.current.click();
+    inputRef.current.click();
   };
 
   const handleImportedFile = async (file) => {
-    if (file.type.startsWith("video/")) {
+    if (file?.type?.startsWith("video/")) {
       setFilePath(file?.path);
       const videoObjectUrl = URL.createObjectURL(file);
       setVideoUrl(videoObjectUrl);
-      setShowDropzone(false);
     } else {
       alert("Please select a valid video file");
     }
@@ -44,20 +43,14 @@ function App() {
     handleImportedFile(file);
   };
 
-  const handleUploadClick = () => {
-    setShowDropzone(!showDropzone);
-  };
-
   const handleRemoveVideo = () => {
     setVideoUrl("");
-    setShowDropzone(true);
     setCurrentTime(0);
     setDuration(0);
     setImages([]);
     setMinVal(0);
-    if (videoRef.current) {
-      videoRef.current.value = "";
-    }
+    videoRef.current.value = "";
+    inputRef.current.value = "";
   };
 
   const handleTimeUpdate = () => {
@@ -105,16 +98,10 @@ function App() {
     };
   }, []);
 
-  const now = new Date().toDateString();
-
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
-      <div className="button-demo">
-        <button onClick={handleUploadClick}>Upload Video</button>
-      </div>
-
       <div className="file-upload">
-        {showDropzone && (
+        {!videoUrl && (
           <Dropzone
             handleDrop={handleDrop}
             handleSelectFile={handleSelectFile}
@@ -122,7 +109,7 @@ function App() {
         )}
 
         <input
-          ref={videoRef}
+          ref={inputRef}
           type="file"
           accept="video/*"
           style={{ display: "none" }}
@@ -140,20 +127,20 @@ function App() {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
               <g
                 id="SVGRepo_tracerCarrier"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               ></g>
               <g id="SVGRepo_iconCarrier">
                 {" "}
                 <path
                   d="M16 8L8 16M8.00001 8L16 16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
                   stroke="#000000"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 ></path>{" "}
               </g>
             </svg>
@@ -190,7 +177,7 @@ function App() {
                 />
                 <div className="output">
                   {images.map((imgData, index) => (
-                    <div style={{ opacity: "1" }}>
+                    <div key={imgData.image} style={{ opacity: "1" }}>
                       <a key={imgData.image} href={imgData.image}>
                         <img src={imgData.image} alt="" />
                       </a>
