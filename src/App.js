@@ -56,6 +56,11 @@ function App() {
   };
 
   const handleTimeUpdate = () => {
+    if (videoRef.current.currentTime >= maxVal) {
+      playPauseButtonRef.current.textContent = "Play";
+      videoRef.current.pause();
+      return;
+    }
     setCurrentTime(videoRef.current.currentTime);
   };
 
@@ -72,13 +77,20 @@ function App() {
     const offsetX = e.clientX - rect.left;
     const percentage = offsetX / rect.width;
     const seekTime = percentage * duration;
+    if (seekTime > maxVal || seekTime < minVal) {
+      return;
+    }
     setCurrentTime(seekTime);
     videoRef.current.currentTime = seekTime;
   };
 
   const handlePlayPause = (e) => {
     e.stopPropagation();
-    setCurrentTime(videoRef.current.currentTime);
+    let currentSeekTime = videoRef.current.currentTime;
+    if (currentSeekTime <= minVal || currentSeekTime >= maxVal) {
+      videoRef.current.currentTime = minVal;
+      setCurrentTime(minVal);  
+    }
     if (videoRef.current.paused) {
       videoRef.current.play();
       playPauseButtonRef.current.textContent = "Pause";
