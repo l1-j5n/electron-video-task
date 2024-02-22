@@ -218,14 +218,102 @@ div#root > div {
   border-radius: 8px;
   padding: 4px 8px;
   line-height: 0.5;
-}
-.trim-outer .trim-btn img{
-  width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #fff;
 }
 
-.action-container{
+.trim-outer .trim-btn img {
+  height: 44px !important;
+  width: 44px !important;
+}
+
+.trim-outer .trim-btn span {
+  padding: 0 5px 0px 0px;
+  min-width: 35px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.action-container {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  inset: 0;
+  background-color: #000000c4;
+  z-index: 99999;
+}
+
+.spinner {
+  margin: auto;
+  width: 100px;
+  height: 70px;
+}
+
+.spinner > div {
+  background: #003d75;
+  height: 100%;
+  width: 6px;
+  float: left;
+  margin: 0 1px;
+  animation: stretch 2s infinite;
+  animation-timing-function: cubic-bezier(0.62, 0.28, 0.23, 0.99);
+}
+
+.spinner .r1 {
+  animation-delay: -1s;
+}
+
+.spinner .r2 {
+  animation-delay: -0.9s;
+}
+
+.spinner .r3 {
+  animation-delay: -0.8s;
+}
+
+.spinner .r4 {
+  animation-delay: -0.7s;
+}
+
+.spinner .r5 {
+  animation-delay: -0.6s;
+}
+
+@keyframes stretch {
+  0%,
+  20%,
+  49% {
+    transform: scaleY(0.4);
+    background-color: #195fd2;
+  }
+  10% {
+    transform: scaleY(1);
+  }
+  50%,
+  70%,
+  100% {
+    transform: scaleY(0.4);
+    background-color: #649129;
+  }
+  60% {
+    transform: scaleY(1);
+    background-color: #649129;
+  }
+}
+.toast-msg {
+  font-size: 40px;
+  margin: 50px 0;
+  color: #d6db02;
+  text-transform: capitalize;
 }

@@ -209,10 +209,11 @@
 
 .selected-range-left {
   background-color: #007bff;
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .selected-range-right {
-  background-color: #007bff3d;
+  background-color: #007bff;
+  opacity: 0.5;
 }
 

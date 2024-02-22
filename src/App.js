@@ -3,8 +3,8 @@ import Dropzone from "./components/Dropzone";
 import "./App.css";
 import MultiRangeSlider from "./components/MultiRangeSlider";
 import { GetFrames } from "./constants/common";
-import TrimImg from "./assets/images/frame-trim.svg"
-import CutImg from "./assets/images/trim-cut.svg"
+import TrimImg from "./assets/images/frame-trim.svg";
+import CutImg from "./assets/images/trim-cut.svg";
 const { ipcRenderer } = window.require("electron");
 
 function App() {
@@ -17,6 +17,8 @@ function App() {
   const [maxRight, setMaxRight] = useState(duration);
   const [images, setImages] = useState([]);
   const [isTrimMode, setIsTrimMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [toaster, setToaster] = useState();
   const videoRef = useRef(null);
   const inputRef = useRef(null);
   const timelineRef = useRef(null);
@@ -35,6 +37,7 @@ function App() {
 
   const handleImportedFile = async (file) => {
     if (file?.type?.startsWith("video/")) {
+      setIsLoading(true);
       setFilePath(file?.path);
       const videoObjectUrl = URL.createObjectURL(file);
       setVideoUrl(videoObjectUrl);
@@ -74,6 +77,7 @@ function App() {
     setMaxRight(duration);
     const frames = await GetFrames(videoUrl, 10, 0);
     setImages(frames);
+    setIsLoading(false);
   };
 
   const handleTimelineClick = (e) => {
@@ -105,6 +109,7 @@ function App() {
   };
 
   const trimClip = (startTime, duration) => {
+    setIsLoading(true);
     ipcRenderer.send("trim-video", {
       inputPath: filePath,
       startTime: startTime,
@@ -113,6 +118,7 @@ function App() {
   };
 
   const cutClip = (startTime, endTime) => {
+    setIsLoading(true);
     ipcRenderer.send("cut-video", {
       inputPath: filePath,
       startTime: startTime,
@@ -123,10 +129,22 @@ function App() {
 
   const handleClipSaveSuccess = (event, args) => {
     console.log("handleClipSaveSuccess >> ", args);
+    setIsLoading(false);
+    handleRemoveVideo();
+    setToaster("Video saved successfully...");
+    setTimeout(() => {
+      setToaster("");
+    }, 3000);
   };
 
   const handleClipSaveError = (event, args) => {
     console.log("handleClipSaveError >> ", args);
+    setIsLoading(false);
+    handleRemoveVideo();
+    setToaster("Video saved successfully...");
+    setTimeout(() => {
+      setToaster("");
+    }, 3000);
   };
 
   useEffect(() => {
@@ -140,6 +158,17 @@ function App() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
+      {isLoading && (
+        <div className="loader">
+          <div class="spinner">
+            <div class="r1"></div>
+            <div class="r2"></div>
+            <div class="r3"></div>
+            <div class="r4"></div>
+            <div class="r5"></div>
+          </div>
+        </div>
+      )}
       <div className="file-upload">
         {!videoUrl && (
           <Dropzone
@@ -156,6 +185,8 @@ function App() {
           onChange={handleFileInputChange}
         />
       </div>
+
+      <div className="toast-msg">{toaster}</div>
 
       {videoUrl && (
         <div className="video-wrapper">
@@ -242,8 +273,12 @@ function App() {
                   Play
                 </button>
                 <div className="trim-outer">
-                  <button className="trim-btn">
+                  <button
+                    className="trim-btn"
+                    onClick={() => setIsTrimMode(!isTrimMode)}
+                  >
                     <img src={isTrimMode ? TrimImg : CutImg} alt="img" />
+                    <span>{isTrimMode ? "Trim" : "Cut"}</span>
                   </button>
                 </div>
                 <button
