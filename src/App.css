@@ -200,8 +200,6 @@ div#root > div {
 
 .save-btn,
 .play-btn {
-  margin-top: 40px !important;
-  margin: 10px;
   border-radius: 8px;
   box-sizing: border-box;
   padding: 0 20px;
@@ -212,4 +210,22 @@ div#root > div {
   font-size: 14px;
   min-width: 100px;
   font-weight: 600;
+}
+
+.trim-outer .trim-btn {
+  background-color: #8a9dd9bf;
+  border: 0;
+  border-radius: 8px;
+  padding: 4px 8px;
+  line-height: 0.5;
+}
+.trim-outer .trim-btn img{
+  width: 44px;
+}
+
+.action-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 }

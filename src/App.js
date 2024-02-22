@@ -3,6 +3,8 @@ import Dropzone from "./components/Dropzone";
 import "./App.css";
 import MultiRangeSlider from "./components/MultiRangeSlider";
 import { GetFrames } from "./constants/common";
+import TrimImg from "./assets/images/frame-trim.svg"
+import CutImg from "./assets/images/trim-cut.svg"
 const { ipcRenderer } = window.require("electron");
 
 function App() {
@@ -14,6 +16,7 @@ function App() {
   const [maxVal, setMaxVal] = useState(duration);
   const [maxRight, setMaxRight] = useState(duration);
   const [images, setImages] = useState([]);
+  const [isTrimMode, setIsTrimMode] = useState(true);
   const videoRef = useRef(null);
   const inputRef = useRef(null);
   const timelineRef = useRef(null);
@@ -90,7 +93,7 @@ function App() {
     let currentSeekTime = videoRef.current.currentTime;
     if (currentSeekTime <= minVal || currentSeekTime >= maxVal) {
       videoRef.current.currentTime = minVal;
-      setCurrentTime(minVal);  
+      setCurrentTime(minVal);
     }
     if (videoRef.current.paused) {
       videoRef.current.play();
@@ -106,6 +109,15 @@ function App() {
       inputPath: filePath,
       startTime: startTime,
       duration: duration,
+    });
+  };
+
+  const cutClip = (startTime, endTime) => {
+    ipcRenderer.send("cut-video", {
+      inputPath: filePath,
+      startTime: startTime,
+      endTime: endTime,
+      maxRight: maxRight,
     });
   };
 
@@ -202,8 +214,10 @@ function App() {
                   }
                   currentTime={currentTime}
                   trimClip={trimClip}
+                  isTrimMode={isTrimMode} // Pass the mode to MultiRangeSlider
                   playPauseButtonRef={playPauseButtonRef}
                   handlePlayPause={handlePlayPause}
+                  cutClip={cutClip} // Pass the cutting function
                 />
                 <div className="output">
                   {images.map((imgData, index) => (
@@ -219,7 +233,7 @@ function App() {
           </div>
           {images?.length > 0 && (
             <>
-              <div className="container">
+              <div className="action-container">
                 <button
                   className="play-btn"
                   ref={playPauseButtonRef}
@@ -227,10 +241,18 @@ function App() {
                 >
                   Play
                 </button>
+                <div className="trim-outer">
+                  <button className="trim-btn">
+                    <img src={isTrimMode ? TrimImg : CutImg} alt="img" />
+                  </button>
+                </div>
                 <button
                   className="save-btn"
-                  onClick={() => trimClip(minVal, maxVal)}
-                  style={{ marginBottom: "20px" }}
+                  onClick={() =>
+                    isTrimMode
+                      ? trimClip(minVal, maxVal)
+                      : cutClip(minVal, maxVal)
+                  }
                 >
                   Save
                 </button>

@@ -13,7 +13,7 @@ const {
 let win;
 
 /**
- * 
+ *
  * @param {*} inputPath Path of currently selected video
  * @param {*} outputPath Path where new clip will be stored
  * @param {*} startTime Clip start time in video
@@ -27,6 +27,38 @@ const trimVideoClip = (inputPath, outputPath, startTime, duration) => {
     ffmpeg(inputPath)
       .setStartTime(startTime)
       .duration(durationInSeconds)
+      .output(outputPath)
+      .on("end", () => resolve(outputPath))
+      .on("error", (err) => reject(err))
+      .run();
+  });
+};
+
+/**
+ *
+ * @param {*} inputPath Path of currently selected video
+ * @param {*} outputPath Path where new clip will be stored
+ * @param {*} startTime Clip start time in video
+ * @param {*} duration Duration from the start time in video
+ * @returns Video clip saved or not information to the renderer process
+ */
+const cutVideoClip = async (
+  inputPath,
+  outputPath,
+  startTime,
+  endTime,
+  maxRight
+) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg()
+      .input(inputPath)
+      .inputOptions(`-ss ${0}`)
+      .inputOptions(`-t ${startTime}`)
+      .input(inputPath)
+      .inputOptions(`-ss ${endTime}`)
+      .inputOptions(`-t ${maxRight}`)
+      .complexFilter("[0:v][1:v]concat=n=2:v=1:a=0[outv]")
+      .map("[outv]")
       .output(outputPath)
       .on("end", () => resolve(outputPath))
       .on("error", (err) => reject(err))
@@ -48,13 +80,51 @@ ipcMain.on("trim-video", async (event, args) => {
 
     // If user selects a valid path
     if (filePath?.filePath) {
-      const outputPath = filePath?.filePath + ".mp4"
+      const outputPath = filePath?.filePath + ".mp4";
       console.log("outputPath: ", outputPath);
       let newVideoClip = await trimVideoClip(
         args?.inputPath,
         outputPath,
         args?.startTime,
         args?.duration
+      );
+
+      if (newVideoClip) {
+        event.reply("clip-save-success", "Video saved successfully.");
+      } else {
+        event.reply("clip-save-error", "Error in saving video!");
+      }
+    } else {
+      event.reply("clip-save-error", "User canceled file selection!");
+    }
+  } catch (err) {
+    console.log("err: ", err);
+    event.reply("clip-save-error", err?.message);
+  }
+});
+
+// Cut clip from the video and save into user's system
+ipcMain.on("cut-video", async (event, args) => {
+  try {
+    console.log("cut video aysnc function called :: ", args);
+
+    // Ask user for path to save new cut video clip
+    const filePath = await dialog.showSaveDialog({
+      title: "Choose Output File Name",
+      filters: [{ name: "Videos", extensions: ["mp4"] }],
+    });
+    console.log("filePath: ", filePath);
+
+    // If user selects a valid path
+    if (filePath?.filePath) {
+      const outputPath = filePath?.filePath + ".mp4";
+      console.log("outputPath: ", outputPath);
+      let newVideoClip = await cutVideoClip(
+        args?.inputPath,
+        outputPath,
+        args?.startTime,
+        args?.endTime,
+        args?.maxRight
       );
 
       if (newVideoClip) {
@@ -121,6 +191,6 @@ function createWindow() {
 
 app.whenReady().then(createWindow);
 
-app.on('ready', () => {
+app.on("ready", () => {
   Menu.setApplicationMenu(null);
 });
