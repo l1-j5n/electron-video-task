@@ -218,23 +218,25 @@ div#root > div {
   border-radius: 8px;
   padding: 4px 8px;
   line-height: 0.5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
+
   color: #fff;
 }
 
-.trim-outer .trim-btn img {
-  height: 44px !important;
-  width: 44px !important;
-}
-
-.trim-outer .trim-btn span {
+.icon-img span {
   padding: 0 5px 0px 0px;
   min-width: 35px;
   font-size: 14px;
   font-weight: 600;
+}
+.icon-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.icon-img img {
+  height: 42px !important;
+  width: 30px !important;
 }
 
 .action-container {

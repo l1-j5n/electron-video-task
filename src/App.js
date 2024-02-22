@@ -68,10 +68,13 @@ function App() {
         videoRef.current.pause();
         return;
       } else {
-        setCurrentTime(videoRef.current.currentTime); 
+        setCurrentTime(videoRef.current.currentTime);
       }
     } else {
-      if (videoRef.current.currentTime >= minVal && videoRef.current.currentTime <= maxVal) {
+      if (
+        videoRef.current.currentTime >= minVal &&
+        videoRef.current.currentTime <= maxVal
+      ) {
         videoRef.current.currentTime = maxVal;
         setCurrentTime(maxVal);
       } else {
@@ -295,7 +298,7 @@ function App() {
             <>
               <div className="action-container">
                 <button
-                  className="play-btn"
+                  className="play-btn icon-img"
                   ref={playPauseButtonRef}
                   onClick={handlePlayPause}
                 >
@@ -303,7 +306,7 @@ function App() {
                 </button>
                 <div className="trim-outer">
                   <button
-                    className="trim-btn"
+                    className="trim-btn icon-img"
                     onClick={() => setIsTrimMode(!isTrimMode)}
                   >
                     <img src={isTrimMode ? TrimImg : CutImg} alt="img" />
@@ -311,7 +314,7 @@ function App() {
                   </button>
                 </div>
                 <button
-                  className="save-btn"
+                  className="save-btn icon-img"
                   onClick={() =>
                     isTrimMode
                       ? trimClip(minVal, maxVal)
