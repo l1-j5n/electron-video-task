@@ -173,10 +173,6 @@ function App() {
     console.log("handleClipSaveError >> ", args);
     setIsLoading(false);
     handleRemoveVideo();
-    setToaster("Video saved successfully...");
-    setTimeout(() => {
-      setToaster("");
-    }, 3000);
   };
 
   useEffect(() => {
@@ -192,12 +188,12 @@ function App() {
     <div style={{ textAlign: "center", marginTop: "20px" }}>
       {isLoading && (
         <div className="loader">
-          <div class="spinner">
-            <div class="r1"></div>
-            <div class="r2"></div>
-            <div class="r3"></div>
-            <div class="r4"></div>
-            <div class="r5"></div>
+          <div className="spinner">
+            <div className="r1"></div>
+            <div className="r2"></div>
+            <div className="r3"></div>
+            <div className="r4"></div>
+            <div className="r5"></div>
           </div>
         </div>
       )}

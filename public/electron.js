@@ -72,7 +72,7 @@ ipcMain.on("trim-video", async (event, args) => {
     console.log("trim video aysnc function called :: ", args);
 
     // Ask user for path to save new trimmed video clip
-    const filePath = await dialog.showSaveDialog({
+    const filePath = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow(), {
       title: "Choose Output File Name",
       filters: [{ name: "Videos", extensions: ["mp4"] }],
     });
@@ -109,7 +109,7 @@ ipcMain.on("cut-video", async (event, args) => {
     console.log("cut video aysnc function called :: ", args);
 
     // Ask user for path to save new cut video clip
-    const filePath = await dialog.showSaveDialog({
+    const filePath = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow(), {
       title: "Choose Output File Name",
       filters: [{ name: "Videos", extensions: ["mp4"] }],
     });
