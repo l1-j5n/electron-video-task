@@ -199,6 +199,7 @@
 }
 
 .selected-range-left,
+.selected-range-middle,
 .selected-range-right {
   position: absolute;
   border-radius: 10px;
@@ -209,6 +210,11 @@
 
 .selected-range-left {
   background-color: #007bff;
+  opacity: 0.5;
+}
+
+.selected-range-middle {
+  background-color: #ff0202;
   opacity: 0.5;
 }
 

@@ -13,6 +13,7 @@ const MultiRangeSlider = ({
   setMaxVal,
   onChange,
   currentTime,
+  isTrimMode,
 }) => {
   const thirdVal = 0;
   const minValRef = useRef(min);
@@ -67,17 +68,30 @@ const MultiRangeSlider = ({
         className="thumb thumb--left"
         style={{ zIndex: minVal > max - 100 && "5" }}
       />
-      <div
-        className="selected-range-left"
-        style={{ width: `${(minVal * 100) / maxRight}%` }}
-      ></div>
-      <div
-        className="selected-range-right"
-        style={{
-          left: `${(maxVal * 100) / maxRight}%`,
-          width: `${((maxRight - maxVal) * 100) / maxRight}%`,
-        }}
-      ></div>
+      {isTrimMode && (
+        <div
+          className="selected-range-left"
+          style={{ width: `${(minVal * 100) / maxRight}%` }}
+        ></div>
+      )}
+      {!isTrimMode && (
+        <div
+          className="selected-range-middle"
+          style={{
+            left: `${(minVal * 100) / maxRight}%`,
+            width: `${((maxVal - minVal) * 100) / maxRight}%`,
+          }}
+        ></div>
+      )}
+      {isTrimMode && (
+        <div
+          className="selected-range-right"
+          style={{
+            left: `${(maxVal * 100) / maxRight}%`,
+            width: `${((maxRight - maxVal) * 100) / maxRight}%`,
+          }}
+        ></div>
+      )}
       <input
         type="range"
         min={min}

@@ -62,12 +62,22 @@ function App() {
   };
 
   const handleTimeUpdate = () => {
-    if (videoRef.current.currentTime >= maxVal) {
-      playPauseButtonRef.current.textContent = "Play";
-      videoRef.current.pause();
-      return;
+    if (isTrimMode) {
+      if (videoRef.current.currentTime >= maxVal) {
+        playPauseButtonRef.current.textContent = "Play";
+        videoRef.current.pause();
+        return;
+      } else {
+        setCurrentTime(videoRef.current.currentTime); 
+      }
+    } else {
+      if (videoRef.current.currentTime >= minVal && videoRef.current.currentTime <= maxVal) {
+        videoRef.current.currentTime = maxVal;
+        setCurrentTime(maxVal);
+      } else {
+        setCurrentTime(videoRef.current.currentTime);
+      }
     }
-    setCurrentTime(videoRef.current.currentTime);
   };
 
   const handleLoadedMetadata = async () => {
@@ -85,19 +95,38 @@ function App() {
     const offsetX = e.clientX - rect.left;
     const percentage = offsetX / rect.width;
     const seekTime = percentage * duration;
-    if (seekTime > maxVal || seekTime < minVal) {
-      return;
+    if (isTrimMode) {
+      if (seekTime > maxVal || seekTime < minVal) {
+        return;
+      } else {
+        setCurrentTime(seekTime);
+        videoRef.current.currentTime = seekTime;
+      }
+    } else if (!isTrimMode) {
+      if (seekTime > minVal && seekTime < maxVal) {
+        return;
+      } else {
+        setCurrentTime(seekTime);
+        videoRef.current.currentTime = seekTime;
+      }
     }
-    setCurrentTime(seekTime);
-    videoRef.current.currentTime = seekTime;
   };
 
   const handlePlayPause = (e) => {
     e.stopPropagation();
     let currentSeekTime = videoRef.current.currentTime;
-    if (currentSeekTime <= minVal || currentSeekTime >= maxVal) {
-      videoRef.current.currentTime = minVal;
-      setCurrentTime(minVal);
+    if (isTrimMode) {
+      if (currentSeekTime <= minVal || currentSeekTime >= maxVal) {
+        videoRef.current.currentTime = minVal;
+        setCurrentTime(minVal);
+      }
+    } else {
+      if (currentSeekTime <= minVal || currentSeekTime >= maxVal) {
+        setCurrentTime(videoRef.current.currentTime);
+      } else {
+        videoRef.current.currentTime = 0;
+        setCurrentTime(0);
+      }
     }
     if (videoRef.current.paused) {
       videoRef.current.play();
@@ -245,10 +274,10 @@ function App() {
                   }
                   currentTime={currentTime}
                   trimClip={trimClip}
-                  isTrimMode={isTrimMode} // Pass the mode to MultiRangeSlider
+                  isTrimMode={isTrimMode}
                   playPauseButtonRef={playPauseButtonRef}
                   handlePlayPause={handlePlayPause}
-                  cutClip={cutClip} // Pass the cutting function
+                  cutClip={cutClip}
                 />
                 <div className="output">
                   {images.map((imgData, index) => (
