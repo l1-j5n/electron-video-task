@@ -26,22 +26,27 @@ function App() {
   // Handle file drop in dropzone
   const handleDrop = (files) => {
     const file = files[0];
+    // This function will handle input file
     handleImportedFile(file);
   };
 
   // Handle file selection in select file input
   const handleSelectFile = () => {
+    // When user clicks on select file button
     inputRef.current.click();
   };
 
   // Handle selected or dropped file and extract data of file
   const handleImportedFile = async (file) => {
+    // Accept only video files
     if (file?.type?.startsWith("video/")) {
       setIsLoading(true);
       setFilePath(file?.path);
+      // Set videoUrl in state
       const videoObjectUrl = URL.createObjectURL(file);
       setVideoUrl(videoObjectUrl);
     } else {
+      // If input file is not video then show an alert
       alert("Please select a valid video file");
     }
   };
@@ -49,11 +54,13 @@ function App() {
   // Handler function for file select event
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
+    // This function will handle input file
     handleImportedFile(file);
   };
 
   // Handle remove file events
   const handleRemoveVideo = () => {
+    // Clear all states and refs
     setVideoUrl("");
     setCurrentTime(0);
     setDuration(0);
@@ -65,7 +72,9 @@ function App() {
 
   // Update seektime while video is playing
   const handleTimeUpdate = () => {
+    // If trim mode is on
     if (isTrimMode) {
+      // If seektime react at max value or a right side brush then pause the video
       if (videoRef.current.currentTime >= maxVal) {
         playPauseButtonRef.current.textContent = "Play";
         videoRef.current.pause();
@@ -73,13 +82,17 @@ function App() {
       } else {
         setCurrentTime(videoRef.current.currentTime);
       }
+
+      // If cut mode is on
     } else {
+      // If current time is between selected brushes then set seektime at position of max value or right side brush
       if (
         videoRef.current.currentTime >= minVal &&
         videoRef.current.currentTime <= maxVal
       ) {
         videoRef.current.currentTime = maxVal;
         setCurrentTime(maxVal);
+        // If currenttime is greater then duration then pause the video
       } else if (videoRef.current.currentTime >= duration) {
         playPauseButtonRef.current.textContent = "Play";
         setCurrentTime(videoRef.current.currentTime);
@@ -91,21 +104,28 @@ function App() {
 
   // Set file data to states on file gets load event
   const handleLoadedMetadata = async () => {
+    // When file successfully gets load then set duration and maximum video length
     let duration = videoRef.current.duration;
     setDuration(duration);
     setMaxVal(duration);
-    const frames = await GetFrames(videoUrl, 10, 0);
+
+    // Get frames from the video to show in timeline
+    const frames = await GetFrames(videoUrl, 10, 0);  // 10 frames will be cut from the video 
+
+    // Set images in timeline
     setImages(frames);
     setIsLoading(false);
   };
 
   // Handle click on timeline component
   const handleTimelineClick = (e) => {
+    // When user clicks on the timeline then get the clicked offset and move red color seektime thumb to that point 
     const rect = timelineRef.current.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const percentage = offsetX / rect.width;
     const seekTime = percentage * duration;
     if (isTrimMode) {
+      // If user clicks outside the selected range then don't move seektime thumb there
       if (seekTime > maxVal || seekTime < minVal) {
         return;
       } else {
@@ -113,6 +133,7 @@ function App() {
         videoRef.current.currentTime = seekTime;
       }
     } else if (!isTrimMode) {
+      // If user clicks inside the selected range then don't move seektime thumb there
       if (seekTime > minVal && seekTime < maxVal) {
         return;
       } else {
@@ -127,6 +148,7 @@ function App() {
     e.stopPropagation();
     let currentSeekTime = videoRef.current.currentTime;
     if (isTrimMode) {
+      // If current seektime or position of the red thumb is not between range then set it to the left brush/thumb
       if (currentSeekTime <= minVal || currentSeekTime >= maxVal) {
         videoRef.current.currentTime = minVal;
         setCurrentTime(minVal);
@@ -135,10 +157,12 @@ function App() {
       if (currentSeekTime <= minVal || currentSeekTime >= maxVal) {
         setCurrentTime(videoRef.current.currentTime);
       } else {
+        // If current seektime or position of the red thumb is in between range then set it to the video start point
         videoRef.current.currentTime = 0;
         setCurrentTime(0);
       }
     }
+    // change play/pause button text accordingly
     if (videoRef.current.paused) {
       videoRef.current.play();
       playPauseButtonRef.current.textContent = "Pause";

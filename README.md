@@ -1,6 +1,6 @@
 # Video - Editor
 
-It is desktop app which is used to trim the video or in other words we can say it used for create a clip from video.
+It is desktop app which is mainly created for perform trim and cut operations on video.
 
 ### Technology Used
 
@@ -12,7 +12,9 @@ It is desktop app which is used to trim the video or in other words we can say i
 ### Features
 
 - Video Trimming
-  - User have to select particular mp4 format file from local system and then have to manage the brushes for set the clip timing. Then on click of save button they just have to pass path and name of video and it will get store at give path in mp4 format.
+  - User have to select particular mp4 format file from local system and then have to turn trim button on by click on trim/cut button set between the play/pause button. Then after manage the brushes for set the clip timing. Then on click of save button they just have to pass path and name of video and it will get store at give path in mp4 format.
+- Video Cutting
+  - User have to select particular mp4 format file from local system and then have to turn cut button on by click on trim/cut button set between the play/pause button. Then after manage the brushes for remove clip timing. Then on click of save button they just have to pass path and name of video and it will get store at give path in mp4 format.
 
 ### Steps to run app in DEVELOPMENT environment
 

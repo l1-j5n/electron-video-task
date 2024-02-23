@@ -30,6 +30,7 @@ let win;
 const trimVideoClip = (inputPath, outputPath, startTime, duration) => {
   const durationInSeconds = duration - startTime;
 
+  // Trim video with ffmpeg library
   return new Promise((resolve, reject) => {
     ffmpeg(inputPath)
       .setStartTime(startTime)
@@ -56,6 +57,7 @@ const cutVideoClip = async (
   endTime,
   maxRight
 ) => {
+  // Cut clip from video with ffmpeg library
   return new Promise((resolve, reject) => {
     ffmpeg()
       .input(inputPath)
@@ -204,6 +206,7 @@ app.whenReady().then(() => {
   }
 });
 
+// Hide menus of the toolbar
 app.on("ready", () => {
   Menu.setApplicationMenu(null);
 });
