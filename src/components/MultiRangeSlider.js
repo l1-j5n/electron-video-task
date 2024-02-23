@@ -8,17 +8,14 @@ const MultiRangeSlider = ({
   max,
   minVal,
   maxVal,
-  maxRight,
   setMinVal,
   setMaxVal,
-  onChange,
+  onRangeChange,
   currentTime,
   isTrimMode,
 }) => {
-  const thirdVal = 0;
   const minValRef = useRef(min);
   const maxValRef = useRef(max);
-  const thirdValRef = useRef(thirdVal);
   const range = useRef(null);
 
   const getPercent = useCallback(
@@ -34,7 +31,7 @@ const MultiRangeSlider = ({
       range.current.style.left = `${minPercent}%`;
       range.current.style.width = `${maxPercent - minPercent}%`;
     }
-  }, [minVal, getPercent]);
+  }, [minVal, maxVal, getPercent]);
 
   useEffect(() => {
     const minPercent = getPercent(minValRef.current);
@@ -45,9 +42,22 @@ const MultiRangeSlider = ({
     }
   }, [maxVal, getPercent]);
 
-  useEffect(() => {
-    thirdValRef.current = thirdVal;
-  }, [minVal, maxVal, max, thirdVal]);
+  const handleMinValChange = (event) => {
+    const value = Math.min(Number(event.target.value), maxVal);
+    setMinVal(value);
+    minValRef.current = value;
+  };
+
+  const handleMaxValChange = (event) => {
+    const value = Math.max(Number(event.target.value), minVal + 1);
+    setMaxVal(value);
+    maxValRef.current = value;
+  };
+
+  const handleCurrentTimeChange = (event) => {
+    const value = Math.max(min, Math.min(Number(event.target.value), max));
+    onRangeChange([minVal, value, maxVal]);
+  };
 
   return (
     <div className="container">
@@ -57,29 +67,22 @@ const MultiRangeSlider = ({
         max={max}
         value={minVal}
         step={"0.01"}
-        onChange={(event) => {
-          let sliderRange = document.getElementsByClassName("slider__range");
-          sliderRange.left = `${(minVal / maxVal) * 100}%`;
-          sliderRange.width = `${maxVal - minVal}%`;
-          const value = Math.min(Number(event.target.value), maxVal);
-          setMinVal(value);
-          minValRef.current = value;
-        }}
+        onChange={handleMinValChange}
         className="thumb thumb--left"
         style={{ zIndex: minVal > max - 100 && "5" }}
       />
       {isTrimMode && (
         <div
           className="selected-range-left"
-          style={{ width: `${(minVal * 100) / maxRight}%` }}
+          style={{ width: `${(minVal * 100) / max}%` }}
         ></div>
       )}
       {!isTrimMode && (
         <div
           className="selected-range-middle"
           style={{
-            left: `${(minVal * 100) / maxRight}%`,
-            width: `${((maxVal - minVal) * 100) / maxRight}%`,
+            left: `${(minVal * 100) / max}%`,
+            width: `${((maxVal - minVal) * 100) / max}%`,
           }}
         ></div>
       )}
@@ -87,8 +90,8 @@ const MultiRangeSlider = ({
         <div
           className="selected-range-right"
           style={{
-            left: `${(maxVal * 100) / maxRight}%`,
-            width: `${((maxRight - maxVal) * 100) / maxRight}%`,
+            left: `${(maxVal * 100) / max}%`,
+            width: `${((max - maxVal) * 100) / max}%`,
           }}
         ></div>
       )}
@@ -98,11 +101,7 @@ const MultiRangeSlider = ({
         max={max}
         value={maxVal}
         step={"0.01"}
-        onChange={(event) => {
-          const value = Math.max(Number(event.target.value), minVal + 1);
-          setMaxVal(value);
-          maxValRef.current = value;
-        }}
+        onChange={handleMaxValChange}
         className="thumb thumb--right"
       />
 
@@ -112,14 +111,7 @@ const MultiRangeSlider = ({
         max={max}
         value={currentTime}
         step={"0.01"}
-        onChange={(event) => {
-          const value = Math.max(
-            min,
-            Math.min(Number(event.target.value), max)
-          );
-          thirdValRef.current = value;
-          onChange([minVal, value, maxVal]);
-        }}
+        onChange={handleCurrentTimeChange}
         className="thumb thumb--third"
       />
 
@@ -141,7 +133,13 @@ const MultiRangeSlider = ({
 MultiRangeSlider.propTypes = {
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onRangeChange: PropTypes.func.isRequired,
+  minVal: PropTypes.number.isRequired,
+  maxVal: PropTypes.number.isRequired,
+  setMinVal: PropTypes.func.isRequired,
+  setMaxVal: PropTypes.func.isRequired,
+  currentTime: PropTypes.number.isRequired,
+  isTrimMode: PropTypes.bool.isRequired,
 };
 
 export default MultiRangeSlider;

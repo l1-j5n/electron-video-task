@@ -1,4 +1,11 @@
-const { app, BrowserWindow, dialog, ipcMain, Menu } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  Menu,
+  globalShortcut,
+} = require("electron");
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 const ffmpeg = require("fluent-ffmpeg");
@@ -69,19 +76,18 @@ const cutVideoClip = async (
 // Trip clip from the video and save into user's system
 ipcMain.on("trim-video", async (event, args) => {
   try {
-    console.log("trim video aysnc function called :: ", args);
-
     // Ask user for path to save new trimmed video clip
-    const filePath = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow(), {
-      title: "Choose Output File Name",
-      filters: [{ name: "Videos", extensions: ["mp4"] }],
-    });
-    console.log("filePath: ", filePath);
+    const filePath = await dialog.showSaveDialog(
+      BrowserWindow.getFocusedWindow(),
+      {
+        title: "Choose Output File Name",
+        filters: [{ name: "Videos", extensions: ["mp4"] }],
+      }
+    );
 
     // If user selects a valid path
     if (filePath?.filePath) {
       const outputPath = filePath?.filePath + ".mp4";
-      console.log("outputPath: ", outputPath);
       let newVideoClip = await trimVideoClip(
         args?.inputPath,
         outputPath,
@@ -106,19 +112,18 @@ ipcMain.on("trim-video", async (event, args) => {
 // Cut clip from the video and save into user's system
 ipcMain.on("cut-video", async (event, args) => {
   try {
-    console.log("cut video aysnc function called :: ", args);
-
     // Ask user for path to save new cut video clip
-    const filePath = await dialog.showSaveDialog(BrowserWindow.getFocusedWindow(), {
-      title: "Choose Output File Name",
-      filters: [{ name: "Videos", extensions: ["mp4"] }],
-    });
-    console.log("filePath: ", filePath);
+    const filePath = await dialog.showSaveDialog(
+      BrowserWindow.getFocusedWindow(),
+      {
+        title: "Choose Output File Name",
+        filters: [{ name: "Videos", extensions: ["mp4"] }],
+      }
+    );
 
     // If user selects a valid path
     if (filePath?.filePath) {
       const outputPath = filePath?.filePath + ".mp4";
-      console.log("outputPath: ", outputPath);
       let newVideoClip = await cutVideoClip(
         args?.inputPath,
         outputPath,
@@ -148,15 +153,14 @@ function createWindow() {
   // If application is already running then restrict to start new app instance
   const singleInstanceData = { name: "Video Editor" };
   const gotTheLock = app.requestSingleInstanceLock(singleInstanceData);
-
   if (!gotTheLock) {
     app.quit();
   }
 
-  // for manage state of window in screen
+  // Manage state/position of window in screen
   const mainWindowState = windowStateKeeper();
 
-  // creating new window
+  // Create new window
   win = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
@@ -185,11 +189,20 @@ function createWindow() {
     win.loadURL(`file://${path.join(__dirname, "../build/index.html#/")}`);
   }
 
-  // managing state with "electron-window-state" library
+  // Managing state with "electron-window-state" library
   mainWindowState.manage(win);
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+
+  // Restrict user from open devtools while in production mode
+  if (Environment === "PRODUCTION") {
+    globalShortcut.register("Control+Shift+I", () => {
+      return false;
+    });
+  }
+});
 
 app.on("ready", () => {
   Menu.setApplicationMenu(null);

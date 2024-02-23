@@ -14,7 +14,6 @@ function App() {
   const [duration, setDuration] = useState(0);
   const [minVal, setMinVal] = useState(0);
   const [maxVal, setMaxVal] = useState(duration);
-  const [maxRight, setMaxRight] = useState(duration);
   const [images, setImages] = useState([]);
   const [isTrimMode, setIsTrimMode] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,17 +23,18 @@ function App() {
   const timelineRef = useRef(null);
   const playPauseButtonRef = useRef(null);
 
-  useEffect(() => {}, [maxVal, inputRef]);
-
+  // Handle file drop in dropzone
   const handleDrop = (files) => {
     const file = files[0];
     handleImportedFile(file);
   };
 
+  // Handle file selection in select file input
   const handleSelectFile = () => {
     inputRef.current.click();
   };
 
+  // Handle selected or dropped file and extract data of file
   const handleImportedFile = async (file) => {
     if (file?.type?.startsWith("video/")) {
       setIsLoading(true);
@@ -46,11 +46,13 @@ function App() {
     }
   };
 
+  // Handler function for file select event
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
     handleImportedFile(file);
   };
 
+  // Handle remove file events
   const handleRemoveVideo = () => {
     setVideoUrl("");
     setCurrentTime(0);
@@ -61,6 +63,7 @@ function App() {
     inputRef.current.value = "";
   };
 
+  // Update seektime while video is playing
   const handleTimeUpdate = () => {
     if (isTrimMode) {
       if (videoRef.current.currentTime >= maxVal) {
@@ -77,22 +80,26 @@ function App() {
       ) {
         videoRef.current.currentTime = maxVal;
         setCurrentTime(maxVal);
+      } else if (videoRef.current.currentTime >= duration) {
+        playPauseButtonRef.current.textContent = "Play";
+        setCurrentTime(videoRef.current.currentTime);
       } else {
         setCurrentTime(videoRef.current.currentTime);
       }
     }
   };
 
+  // Set file data to states on file gets load event
   const handleLoadedMetadata = async () => {
     let duration = videoRef.current.duration;
     setDuration(duration);
     setMaxVal(duration);
-    setMaxRight(duration);
     const frames = await GetFrames(videoUrl, 10, 0);
     setImages(frames);
     setIsLoading(false);
   };
 
+  // Handle click on timeline component
   const handleTimelineClick = (e) => {
     const rect = timelineRef.current.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
@@ -115,6 +122,7 @@ function App() {
     }
   };
 
+  // Handle play/pause video button
   const handlePlayPause = (e) => {
     e.stopPropagation();
     let currentSeekTime = videoRef.current.currentTime;
@@ -140,6 +148,7 @@ function App() {
     }
   };
 
+  // Call electron event for trim video
   const trimClip = (startTime, duration) => {
     setIsLoading(true);
     ipcRenderer.send("trim-video", {
@@ -149,16 +158,18 @@ function App() {
     });
   };
 
+  // Call electron event for cut video
   const cutClip = (startTime, endTime) => {
     setIsLoading(true);
     ipcRenderer.send("cut-video", {
       inputPath: filePath,
       startTime: startTime,
       endTime: endTime,
-      maxRight: maxRight,
+      maxRight: duration,
     });
   };
 
+  // Successfully file save handler event
   const handleClipSaveSuccess = (event, args) => {
     console.log("handleClipSaveSuccess >> ", args);
     setIsLoading(false);
@@ -169,6 +180,7 @@ function App() {
     }, 3000);
   };
 
+  // Error handler event
   const handleClipSaveError = (event, args) => {
     console.log("handleClipSaveError >> ", args);
     setIsLoading(false);
@@ -265,10 +277,9 @@ function App() {
                   max={duration}
                   minVal={minVal}
                   maxVal={maxVal}
-                  maxRight={maxRight}
                   setMinVal={setMinVal}
                   setMaxVal={setMaxVal}
-                  onChange={({ min, max }) =>
+                  onRangeChange={({ min, max }) =>
                     console.log(`min = ${min}, max = ${max}`)
                   }
                   currentTime={currentTime}

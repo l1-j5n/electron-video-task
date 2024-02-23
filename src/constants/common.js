@@ -1,6 +1,6 @@
 /**
  *
- * @param {string} timeString String '02:30'
+ * @param {string} timeString Ex. String '02:30'
  * @returns Returns total seconds of the given timeString
  */
 function toSeconds(timeString) {
@@ -10,7 +10,7 @@ function toSeconds(timeString) {
 
 /**
  *
- * @param {string} timeString Number 125
+ * @param {string} timeString Ex. Number 125
  * @returns Returns (02:05) total minutes and seconds of the given timeString
  */
 function toMinutes(timeString) {
@@ -25,10 +25,10 @@ function toMinutes(timeString) {
 }
 
 /**
- * Extracts frames from the video and returns them as an array of imageData
  * @param {string} videoUrl url to the video file (html5 compatible format) eg: mp4
  * @param {number} amount number of frames per second or total number of frames that you want to extract
  * @param {number} type [fps, totalFrames] The method of extracting frames: Number of frames per second of video or the total number of frames across the whole video duration. defaults to fps
+ * @description Extracts frames from the video and returns them as an array of imageData
  * @returns Array of frames
  */
 async function GetFrames(videoUrl, amount) {
@@ -65,11 +65,11 @@ async function GetFrames(videoUrl, amount) {
 }
 
 /**
- * Retrieves a single frame from the video at a specified time
  * @param {HTMLVideoElement} video HTML video element
  * @param {CanvasRenderingContext2D} context Canvas rendering context
  * @param {HTMLCanvasElement} canvas HTML canvas element
  * @param {number} time Time in seconds to retrieve the frame from
+ * @description Retrieves a single frame from the video at a specified time
  * @returns Captured frame
  */
 async function getVideoFrame(video, context, canvas, time) {
@@ -84,11 +84,11 @@ async function getVideoFrame(video, context, canvas, time) {
 }
 
 /**
- * Stores the frame on the canvas and resolves with the data URL
  * @param {HTMLVideoElement} video HTML video element
  * @param {CanvasRenderingContext2D} context Canvas rendering context
  * @param {HTMLCanvasElement} canvas HTML canvas element
  * @param {function} resolve Resolve function for the Promise
+ * @description Stores the frame on the canvas and resolves with the data URL
  */
 function storeFrame(video, context, canvas, resolve) {
   context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
